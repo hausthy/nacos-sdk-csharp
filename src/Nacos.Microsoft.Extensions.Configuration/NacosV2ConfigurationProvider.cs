@@ -36,7 +36,7 @@
             var options = Options.Create(new NacosSdkOptions()
             {
                 ServerAddresses = configurationSource.ServerAddresses,
-                Namespace = configurationSource.Tenant,
+                Namespace = configurationSource.GetNamespace(),
                 AccessKey = configurationSource.AccessKey,
                 ContextPath = configurationSource.ContextPath,
                 EndPoint = configurationSource.EndPoint,
@@ -46,6 +46,8 @@
                 UserName = configurationSource.UserName,
                 ListenInterval = 20000,
                 ConfigUseRpc = configurationSource.ConfigUseRpc,
+                ConfigFilterAssemblies = configurationSource.ConfigFilterAssemblies,
+                ConfigFilterExtInfo = configurationSource.ConfigFilterExtInfo,
             });
 
             var nacosLoggerFactory = Nacos.Microsoft.Extensions.Configuration.NacosLog.NacosLoggerFactory.GetInstance(configurationSource.LoggingBuilder);
@@ -109,7 +111,7 @@
                             var config = _client.GetConfig(listener.DataId, listener.Group, 3000)
                                 .ConfigureAwait(false).GetAwaiter().GetResult();
 
-                            _configDict.AddOrUpdate($"{_configurationSource.Tenant}#{listener.Group}#{listener.DataId}", config, (x, y) => config);
+                            _configDict.AddOrUpdate($"{_configurationSource.GetNamespace()}#{listener.Group}#{listener.DataId}", config, (x, y) => config);
 
                             var data = _parser.Parse(config);
 
@@ -138,7 +140,7 @@
                         var config = _client.GetConfig(_configurationSource.DataId, _configurationSource.Group, 3000)
                             .ConfigureAwait(false).GetAwaiter().GetResult();
 
-                        _configDict.AddOrUpdate($"{_configurationSource.Tenant}#{_configurationSource.Group}#{_configurationSource.DataId}", config, (x, y) => config);
+                        _configDict.AddOrUpdate($"{_configurationSource.GetNamespace()}#{_configurationSource.Group}#{_configurationSource.DataId}", config, (x, y) => config);
 
                         var data = _parser.Parse(config);
 
@@ -177,7 +179,7 @@
                 this._optional = optional;
                 this._provider = provider;
                 this._logger = logger;
-                _key = $"{provider._configurationSource.Tenant}#{_group}#{_dataId}";
+                _key = $"{provider._configurationSource.GetNamespace()}#{_group}#{_dataId}";
             }
 
 

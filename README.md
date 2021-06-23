@@ -1,4 +1,4 @@
-# nacos-sdk-csharp 　　　　　   　　   　　　[中文](./README.zh-cn.md)
+﻿# nacos-sdk-csharp 　　　　　   　　   　　　[中文](./README.zh-cn.md)
 
 csharp(dotnet core) implementation of [nacos](https://nacos.io/) OpenAPI.
 
@@ -71,13 +71,15 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
         "Group": "DEFAULT_GROUP"
       }
     ],    
-    "Tenant": "csharp-demo",
+    "Namespace": "csharp-demo",
     "ServerAddresses": [ "http://localhost:8848/" ],
     "UserName": "test2",
     "Password": "123456",
     "AccessKey": "",
     "SecretKey": "",
-    "EndPoint": "acm.aliyun.com"
+    "EndPoint": "acm.aliyun.com",
+    "ConfigFilterAssemblies": ["YouPrefix.AssemblyName"],
+    "ConfigFilterExtInfo": "some ext infomation"
   }
 }
 ```
@@ -139,7 +141,7 @@ public class Startup
     {
         // ...
 
-        services.AddNacosAspNet(Configuration);
+        services.AddNacosAspNet(Configuration, "nacos");
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
